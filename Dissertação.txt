@@ -1,0 +1,1926 @@
+****************************************************************************************************************************************************************
+****************************************************************************************************************************************************************
+**********************************************************DISSERTAÇÃO - HUMBERTO FILIPE*************************************************************************
+****************************************************************************************************************************************************************
+****************************************************************************************************************************************************************
+
+save "C:\Users\Usuario\Documents\Mestrado em Economia\Dissertação\Arquivos do Stata\Oficial\ENEM2019.dta"
+
+***EXCLUINDO QUEM FALTOU OU FOI ELIMINADO DAS PROVAS DE MT E LC E OS MISSINGS DESTAS VARIÁVEIS E DAS VARIÁVEIS DE NOTA DE LC E MT***
+
+drop if tp_presenca_lc==0 
+drop if tp_presenca_mt==0
+
+drop if tp_presenca_lc==2 
+drop if tp_presenca_mt==2
+ 
+drop if tp_presenca_lc==. 
+drop if tp_presenca_mt==.
+
+drop if nu_nota_lc==. 
+drop if nu_nota_mt==.
+
+***GERANDO A VARIÁVEL 'DEFICIENTES'***
+
+*ELIMINANDO OS MISSINGS DAS VARIÁVEIS DE INDICATIVO DE DEFICIÊNCIA
+
+drop if in_baixa_visao==. 
+drop if in_cegueira==. 
+drop if in_surdez==. 
+drop if in_deficiencia_auditiva==. 
+drop if in_surdo_cegueira==. 
+drop if in_deficiencia_fisica==. 
+drop if in_deficiencia_mental==. 
+drop if in_deficit_atencao==. 
+drop if in_dislexia==. 
+drop if in_discalculia==. 
+drop if in_autismo==. 
+drop if in_visao_monocular==. 
+drop if in_outra_def==.
+
+gen deficientes=.
+replace deficientes=1 if (in_baixa_visao==1|in_cegueira==1|in_surdez==1|in_deficiencia_auditiva==1|in_surdo_cegueira==1|in_deficiencia_fisica==1|in_deficiencia_mental==1|in_deficit_atencao==1|in_dislexia==1|in_discalculia==1|in_autismo==1|in_visao_monocular==1|in_outra_def==1)
+replace deficientes=0 if deficientes==.
+
+***GERANDO A VARIÁVEL 'QUANTIDADE DE PESSOAS NO DOMICÍLIO'***
+
+drop if q005==.
+
+rename q005 quantpes_dom
+
+***GERANDO AS VARIÁVEIS DE ESCOLARIDADE DO PAI***
+
+drop if q001=="H" 
+drop if q001=="."
+
+*esc_pai1 fundamental incompleto, esc_pai2 fundamental completo, esc_pai3 médio completo, esc_pai4 superior completo, esc_pai5 pós-graduação completa.*
+
+gen esc_pai1=.
+replace esc_pai1=1 if (q001=="A"|q001=="B"|q001=="C")
+replace esc_pai1=0 if esc_pai1==.
+
+gen esc_pai2=.
+replace esc_pai2=1 if q001=="D"
+replace esc_pai2=0 if esc_pai2==.
+
+gen esc_pai3=.
+replace esc_pai3=1 if q001=="E"
+replace esc_pai3=0 if esc_pai3==.
+
+gen esc_pai4=.
+replace esc_pai4=1 if q001=="F"
+replace esc_pai4=0 if esc_pai4==.
+
+gen esc_pai5=.
+replace esc_pai5=1 if q001=="G"
+replace esc_pai5=0 if esc_pai5==.
+
+
+***GERANDO AS VARIÁVEIS DE ESCOLARIDADE DA MÃE***
+
+drop if q002=="H"
+drop if q002=="."
+
+*esc_mae1 fundamental incompleto, esc_mae2 fundamental completo, esc_mae3 médio completo, esc_mae4 superior completo, esc_mae5 pós-graduação completa.*
+
+gen esc_mae1=.
+replace esc_mae1=1 if (q002=="A"|q002=="B"|q002=="C")
+replace esc_mae1=0 if esc_mae1==.
+
+gen esc_mae2=.
+replace esc_mae2=1 if q002=="D"
+replace esc_mae2=0 if esc_mae2==.
+
+gen esc_mae3=.
+replace esc_mae3=1 if q002=="E"
+replace esc_mae3=0 if esc_mae3==.
+
+gen esc_mae4=.
+replace esc_mae4=1 if q002=="F"
+replace esc_mae4=0 if esc_mae4==.
+
+gen esc_mae5=.
+replace esc_mae5=1 if q002=="G"
+replace esc_mae5=0 if esc_mae5==.
+
+***GERANDO AS VARIÁVEIS DE RENDA FAMILIAR***
+
+drop if q006=="."
+drop if q006=="A"
+
+*rendfam1 até 1 sm, rendfam2 até 2 sm, rendfam3 até 4 sm, rendfam4 até 8 sm, rendfam5 até 12 sm, rendfam6 mais do que 12 sm*
+
+gen rendfam1=.
+replace rendfam1=1 if q006=="B"
+replace rendfam1=0 if rendfam1==.
+
+gen rendfam2=.
+replace rendfam2=1 if (q006=="C"|q006=="D")
+replace rendfam2=0 if rendfam2==.
+
+gen rendfam3=.
+replace rendfam3=1 if (q006=="E"|q006=="F"|q006=="G")
+replace rendfam3=0 if rendfam3==.
+
+gen rendfam4=.
+replace rendfam4=1 if (q006=="H"|q006=="I"|q006=="J"|q006=="K")
+replace rendfam4=0 if rendfam4==.
+
+gen rendfam5=.
+replace rendfam5=1 if (q006=="L"|q006=="M"|q006=="N")
+replace rendfam5=0 if rendfam5==.
+
+gen rendfam6=.
+replace rendfam6=1 if (q006=="O"|q006=="P"|q006=="Q")
+replace rendfam6=0 if rendfam6==.
+
+***GERANDO A VARIÁVEL 'EMPREGADO(A) DOMÉSTICO(A)', RECEBENDO VALOR 1 SE TRABALHA ALGUM EMPREGADO(A) NA CASA DO ESTUDANTE***
+
+drop if q007=="."
+
+gen empreg_dom=.
+replace empreg_dom=1 if (q007=="B"|q007=="C"|q007=="D")
+replace empreg_dom=0 if q007=="A"
+
+***GERANDO A VARIÁVEL 'INTERNET', RECEBENDO VALOR 1 SE TIVER ACESSO A INTERNET EM CASA'***
+
+drop if q025=="."
+
+gen internet=.
+replace internet=1 if q025=="B"
+replace internet=0 if q025=="A"
+
+***GERANDO A VARIÁVEL 'IDADE'***
+
+rename nu_idade idade
+
+drop if idade==.
+
+tab idade
+
+drop if idade<14
+
+tab idade
+
+***GERANDO A VARIÁVEL 'SEXO', SENDO HOMENS=1, MULHERES=0***
+
+drop if tp_sexo=="."
+
+gen sexo=.
+replace sexo=1 if tp_sexo=="M"
+replace sexo=0 if tp_sexo=="F"
+
+***GERANDO A VARIÁVEL 'COR', SENDO BRANCOS=1, NÃO BRANCOS=0***
+
+drop if tp_cor_raca==0
+
+tab tp_cor_raca
+
+gen cor=.
+replace cor=1 if tp_cor_raca==1
+replace cor=0 if cor==.
+
+***GERANDO AS VARIÁVEIS DE REGIÃO***
+
+drop if sg_uf_residencia=="."
+
+gen norte=.
+replace norte=1 if (sg_uf_residencia=="AC"|sg_uf_residencia=="AM"|sg_uf_residencia=="AP"|sg_uf_residencia=="PA"|sg_uf_residencia=="RO"|sg_uf_residencia=="RR"|sg_uf_residencia=="TO")
+replace norte=0 if norte==.
+
+gen nordeste=.
+replace nordeste=1 if (sg_uf_residencia=="MA"|sg_uf_residencia=="PI"|sg_uf_residencia=="CE"|sg_uf_residencia=="RN"|sg_uf_residencia=="PB"|sg_uf_residencia=="PE"|sg_uf_residencia=="SE"|sg_uf_residencia=="AL"|sg_uf_residencia=="BA")
+replace nordeste=0 if nordeste==.
+
+gen sudeste=.
+replace sudeste=1 if (sg_uf_residencia=="MG"|sg_uf_residencia=="RJ"|sg_uf_residencia=="SP"|sg_uf_residencia=="ES")
+replace sudeste=0 if sudeste==.
+
+gen sul=.
+replace sul=1 if (sg_uf_residencia=="RS"|sg_uf_residencia=="SC"|sg_uf_residencia=="PR")
+replace sul=0 if sul==.
+
+gen centro_oeste=.
+replace centro_oeste=1 if (sg_uf_residencia=="MT"|sg_uf_residencia=="MS"|sg_uf_residencia=="GO"|sg_uf_residencia=="DF")
+replace centro_oeste=0 if centro_oeste==.
+
+***GERANDO A VARIÁVEL 'COMPUTADOR', RECEBENDO VALOR 1 SE TIVER PELO MENOS UM NO DOMICÍLIO***
+
+drop if q024=="."
+
+gen computador=.
+replace computador=1 if (q024=="B"|q024=="C"|q024=="D"|q024=="E")
+replace computador=0 if q024=="A"
+
+rename nu_nota_lc nota_port 
+rename nu_nota_mt nota_mat
+
+***GERANDO A VARIÁVEL 'RECURSOS', RELATIVO AO RECURSO DE ATENDIMENTO ESPECÍFICO OU ESPECIALIZADO QUE RECEBEU / SOLICITOU***
+
+drop if in_braille==. 
+drop if in_ampliada_24==. 
+drop if in_ampliada_18==. 
+drop if in_ledor==. 
+drop if in_acesso==. 
+drop if in_transcricao==. 
+drop if in_libras==. 
+drop if in_tempo_adicional==. 
+drop if in_leitura_labial==. 
+drop if in_mesa_cadeira_rodas==. 
+drop if in_mesa_cadeira_separada==. 
+drop if in_apoio_perna==. 
+drop if in_guia_interprete==. 
+drop if in_computador==. 
+drop if in_cadeira_especial==. 
+drop if in_cadeira_canhoto==. 
+drop if in_cadeira_acolchoada==. 
+drop if in_prova_deitado==. 
+drop if in_mobiliario_obeso==. 
+drop if in_lamina_overlay==. 
+drop if in_protetor_auricular==. 
+drop if in_medidor_glicose==. 
+drop if in_maquina_braile==. 
+drop if in_soroban==. 
+drop if in_marca_passo==. 
+drop if in_sonda==. 
+drop if in_medicamentos==. 
+drop if in_sala_individual==. 
+drop if in_sala_especial==. 
+drop if in_sala_acompanhante==. 
+drop if in_mobiliario_especifico==. 
+drop if in_material_especifico==.
+
+gen recursos=.
+replace recursos=1 if (in_braille==1|in_ampliada_24==1|in_ampliada_18==1|in_ledor==1|in_acesso==1|in_transcricao==1|in_libras==1|in_leitura_labial==1|in_mesa_cadeira_rodas==1|in_mesa_cadeira_separada==1|in_apoio_perna==1|in_guia_interprete==1|in_computador==1|in_cadeira_especial==1|in_cadeira_canhoto==1|in_cadeira_acolchoada==1|in_prova_deitado==1|in_mobiliario_obeso==1|in_lamina_overlay==1|in_protetor_auricular==1|in_medidor_glicose==1|in_maquina_braile==1|in_soroban==1|in_marca_passo==1|in_sonda==1|in_medicamentos==1|in_sala_individual==1|in_sala_especial==1|in_sala_acompanhante==1|in_mobiliario_especifico==1|in_material_especifico==1|in_tempo_adicional==1)
+replace recursos=0 if recursos==.
+
+drop if recursos==.
+
+rename in_sem_recurso sem_recurso
+
+***GERANDO A VARIÁVEL ATENDIMENTO ESPECIALIZADO', RECEBENDO VALOR 1 SE A PESSOA SE AUTO-DECLAROU DEFICIENTE E ESTÁ INCLUÍDA NOS 'RECURSOS' E 0 SE FOR DEFICIENTE E NÃO ESTIVER INCLUSA EM 'RECURSOS'***
+
+gen atend_especializado=.
+replace atend_especializado=1 if (deficientes==1&recursos==1)
+replace atend_especializado=0 if (deficientes==1&recursos==0)
+
+tab deficientes
+
+tab atend_especializado
+
+******RESULTADOS DOS COMANDOS ANTERIORES******
+. import delimited "C:\Users\Usuario\Documents\Mestrado em Economia\Dissertação\ENEM 2019\DADOS\MICRODADOS_ENEM_20
+> 19.csv"
+(136 vars, 5,095,270 obs)
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. save "C:\Users\Usuario\Documents\Mestrado em Economia\Dissertação\Arquivos do Stata\Oficial\ENEM2019.dta"
+file C:\Users\Usuario\Documents\Mestrado em Economia\Dissertação\Arquivos do Stata\Oficial\ENEM2019.dta saved
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. drop if tp_presenca_lc==0 
+(1,168,053 observations deleted)
+
+. drop if tp_presenca_mt==0
+(222,915 observations deleted)
+
+. 
+. drop if tp_presenca_lc==2 
+(402 observations deleted)
+
+. drop if tp_presenca_mt==2
+(1,892 observations deleted)
+
+.  
+. drop if tp_presenca_lc==. 
+(0 observations deleted)
+
+. drop if tp_presenca_mt==.
+(0 observations deleted)
+
+. 
+. drop if nu_nota_lc==. 
+(0 observations deleted)
+
+. drop if nu_nota_mt==.
+(0 observations deleted)
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. drop if in_baixa_visao==. 
+(0 observations deleted)
+
+. drop if in_cegueira==. 
+(0 observations deleted)
+
+. drop if in_surdez==. 
+(0 observations deleted)
+
+. drop if in_deficiencia_auditiva==. 
+(0 observations deleted)
+
+. drop if in_surdo_cegueira==. 
+(0 observations deleted)
+
+. drop if in_deficiencia_fisica==. 
+(0 observations deleted)
+
+. drop if in_deficiencia_mental==. 
+(0 observations deleted)
+
+. drop if in_deficit_atencao==. 
+(0 observations deleted)
+
+. drop if in_dislexia==. 
+(0 observations deleted)
+
+. drop if in_discalculia==. 
+(0 observations deleted)
+
+. drop if in_autismo==. 
+(0 observations deleted)
+
+. drop if in_visao_monocular==. 
+(0 observations deleted)
+
+. drop if in_outra_def==.
+(0 observations deleted)
+
+. 
+. gen deficientes=.
+(3,702,008 missing values generated)
+
+. replace deficientes=1 if (in_baixa_visao==1|in_cegueira==1|in_surdez==1|in_deficiencia_auditiva==1|in_surdo_cegu
+> eira==1|in_deficiencia_fisica==1|in_deficiencia_mental==1|in_deficit_atencao==1|in_dislexia==1|in_discalculia==1
+> |in_autismo==1|in_visao_monocular==1|in_outra_def==1)
+(24,633 real changes made)
+
+. replace deficientes=0 if deficientes==.
+(3,677,375 real changes made)
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. drop if q005==.
+(0 observations deleted)
+
+. 
+. rename q005 quantpes_dom
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. drop if q001=="H" 
+(306,177 observations deleted)
+
+. drop if q001=="."
+(0 observations deleted)
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. gen esc_pai1=.
+(3,395,831 missing values generated)
+
+. replace esc_pai1=1 if (q001=="A"|q001=="B"|q001=="C")
+(1,454,534 real changes made)
+
+. replace esc_pai1=0 if esc_pai1==.
+(1,941,297 real changes made)
+
+. 
+. gen esc_pai2=.
+(3,395,831 missing values generated)
+
+. replace esc_pai2=1 if q001=="D"
+(433,193 real changes made)
+
+. replace esc_pai2=0 if esc_pai2==.
+(2,962,638 real changes made)
+
+. 
+. gen esc_pai3=.
+(3,395,831 missing values generated)
+
+. replace esc_pai3=1 if q001=="E"
+(1,006,256 real changes made)
+
+. replace esc_pai3=0 if esc_pai3==.
+(2,389,575 real changes made)
+
+. 
+. gen esc_pai4=.
+(3,395,831 missing values generated)
+
+. replace esc_pai4=1 if q001=="F"
+(308,319 real changes made)
+
+. replace esc_pai4=0 if esc_pai4==.
+(3,087,512 real changes made)
+
+. 
+. gen esc_pai5=.
+(3,395,831 missing values generated)
+
+. replace esc_pai5=1 if q001=="G"
+(193,529 real changes made)
+
+. replace esc_pai5=0 if esc_pai5==.
+(3,202,302 real changes made)
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. drop if q002=="H"
+(29,748 observations deleted)
+
+. drop if q002=="."
+(0 observations deleted)
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. gen esc_mae1=.
+(3,366,083 missing values generated)
+
+. replace esc_mae1=1 if (q002=="A"|q002=="B"|q002=="C")
+(1,067,760 real changes made)
+
+. replace esc_mae1=0 if esc_mae1==.
+(2,298,323 real changes made)
+
+. 
+. gen esc_mae2=.
+(3,366,083 missing values generated)
+
+. replace esc_mae2=1 if q002=="D"
+(438,175 real changes made)
+
+. replace esc_mae2=0 if esc_mae2==.
+(2,927,908 real changes made)
+
+. 
+. gen esc_mae3=.
+(3,366,083 missing values generated)
+
+. replace esc_mae3=1 if q002=="E"
+(1,144,539 real changes made)
+
+. replace esc_mae3=0 if esc_mae3==.
+(2,221,544 real changes made)
+
+. 
+. gen esc_mae4=.
+(3,366,083 missing values generated)
+
+. replace esc_mae4=1 if q002=="F"
+(396,108 real changes made)
+
+. replace esc_mae4=0 if esc_mae4==.
+(2,969,975 real changes made)
+
+. 
+. gen esc_mae5=.
+(3,366,083 missing values generated)
+
+. replace esc_mae5=1 if q002=="G"
+(319,501 real changes made)
+
+. replace esc_mae5=0 if esc_mae5==.
+(3,046,582 real changes made)
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. drop if q006=="."
+(0 observations deleted)
+
+. drop if q006=="A"
+(135,895 observations deleted)
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. gen rendfam1=.
+(3,230,188 missing values generated)
+
+. replace rendfam1=1 if q006=="B"
+(777,759 real changes made)
+
+. replace rendfam1=0 if rendfam1==.
+(2,452,429 real changes made)
+
+. 
+. gen rendfam2=.
+(3,230,188 missing values generated)
+
+. replace rendfam2=1 if (q006=="C"|q006=="D")
+(1,136,570 real changes made)
+
+. replace rendfam2=0 if rendfam2==.
+(2,093,618 real changes made)
+
+. 
+. gen rendfam3=.
+(3,230,188 missing values generated)
+
+. replace rendfam3=1 if (q006=="E"|q006=="F"|q006=="G")
+(702,133 real changes made)
+
+. replace rendfam3=0 if rendfam3==.
+(2,528,055 real changes made)
+
+. 
+. gen rendfam4=.
+(3,230,188 missing values generated)
+
+. replace rendfam4=1 if (q006=="H"|q006=="I"|q006=="J"|q006=="K")
+(371,128 real changes made)
+
+. replace rendfam4=0 if rendfam4==.
+(2,859,060 real changes made)
+
+. 
+. gen rendfam5=.
+(3,230,188 missing values generated)
+
+. replace rendfam5=1 if (q006=="L"|q006=="M"|q006=="N")
+(120,794 real changes made)
+
+. replace rendfam5=0 if rendfam5==.
+(3,109,394 real changes made)
+
+. 
+. gen rendfam6=.
+(3,230,188 missing values generated)
+
+. replace rendfam6=1 if (q006=="O"|q006=="P"|q006=="Q")
+(121,804 real changes made)
+
+. replace rendfam6=0 if rendfam6==.
+(3,108,384 real changes made)
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. drop if q007=="."
+(0 observations deleted)
+
+. 
+. gen empreg_dom=.
+(3,230,188 missing values generated)
+
+. replace empreg_dom=1 if (q007=="B"|q007=="C"|q007=="D")
+(272,979 real changes made)
+
+. replace empreg_dom=0 if q007=="A"
+(2,957,209 real changes made)
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. drop if q025=="."
+(0 observations deleted)
+
+. 
+. gen internet=.
+(3,230,188 missing values generated)
+
+. replace internet=1 if q025=="B"
+(2,621,856 real changes made)
+
+. replace internet=0 if q025=="A"
+(608,332 real changes made)
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. rename nu_idade idade
+
+. 
+. drop if idade==.
+(0 observations deleted)
+
+. 
+. tab idade
+
+   NU_IDADE |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |          1        0.00        0.00
+          2 |          2        0.00        0.00
+          3 |          3        0.00        0.00
+          4 |          1        0.00        0.00
+          5 |          4        0.00        0.00
+          6 |          8        0.00        0.00
+          7 |         12        0.00        0.00
+          8 |         22        0.00        0.00
+          9 |          1        0.00        0.00
+         10 |          5        0.00        0.00
+         11 |          5        0.00        0.00
+         12 |         26        0.00        0.00
+         13 |        178        0.01        0.01
+         14 |      3,900        0.12        0.13
+         15 |     62,406        1.93        2.06
+         16 |    256,300        7.93       10.00
+         17 |    662,128       20.50       30.49
+         18 |    616,574       19.09       49.58
+         19 |    370,284       11.46       61.04
+         20 |    244,519        7.57       68.61
+         21 |    163,739        5.07       73.68
+         22 |    125,846        3.90       77.58
+         23 |     97,565        3.02       80.60
+         24 |     78,940        2.44       83.04
+         25 |     62,867        1.95       84.99
+         26 |     51,607        1.60       86.59
+         27 |     43,143        1.34       87.92
+         28 |     37,149        1.15       89.07
+         29 |     31,652        0.98       90.05
+         30 |     29,246        0.91       90.96
+         31 |     26,684        0.83       91.78
+         32 |     23,409        0.72       92.51
+         33 |     22,055        0.68       93.19
+         34 |     20,012        0.62       93.81
+         35 |     18,140        0.56       94.37
+         36 |     17,329        0.54       94.91
+         37 |     16,739        0.52       95.43
+         38 |     15,763        0.49       95.92
+         39 |     13,946        0.43       96.35
+         40 |     12,609        0.39       96.74
+         41 |     11,198        0.35       97.08
+         42 |     10,137        0.31       97.40
+         43 |      9,317        0.29       97.69
+         44 |      8,396        0.26       97.95
+         45 |      7,666        0.24       98.18
+         46 |      6,996        0.22       98.40
+         47 |      6,542        0.20       98.60
+         48 |      5,776        0.18       98.78
+         49 |      5,282        0.16       98.95
+         50 |      4,641        0.14       99.09
+         51 |      4,102        0.13       99.22
+         52 |      3,781        0.12       99.33
+         53 |      3,289        0.10       99.44
+         54 |      2,991        0.09       99.53
+         55 |      2,559        0.08       99.61
+         56 |      2,208        0.07       99.68
+         57 |      1,976        0.06       99.74
+         58 |      1,528        0.05       99.78
+         59 |      1,334        0.04       99.83
+         60 |      1,059        0.03       99.86
+         61 |        875        0.03       99.88
+         62 |        761        0.02       99.91
+         63 |        584        0.02       99.93
+         64 |        473        0.01       99.94
+         65 |        397        0.01       99.95
+         66 |        310        0.01       99.96
+         67 |        290        0.01       99.97
+         68 |        211        0.01       99.98
+         69 |        180        0.01       99.98
+         70 |        132        0.00       99.99
+         71 |         97        0.00       99.99
+         72 |         65        0.00       99.99
+         73 |         57        0.00      100.00
+         74 |         45        0.00      100.00
+         75 |         29        0.00      100.00
+         76 |         21        0.00      100.00
+         77 |         18        0.00      100.00
+         78 |         12        0.00      100.00
+         79 |         14        0.00      100.00
+         80 |          5        0.00      100.00
+         81 |          5        0.00      100.00
+         82 |          2        0.00      100.00
+         83 |          4        0.00      100.00
+         84 |          1        0.00      100.00
+         85 |          1        0.00      100.00
+         86 |          1        0.00      100.00
+         92 |          1        0.00      100.00
+------------+-----------------------------------
+      Total |  3,230,188      100.00
+
+. 
+. drop if idade<14
+(268 observations deleted)
+
+. 
+. tab idade
+
+   NU_IDADE |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         14 |      3,900        0.12        0.12
+         15 |     62,406        1.93        2.05
+         16 |    256,300        7.94        9.99
+         17 |    662,128       20.50       30.49
+         18 |    616,574       19.09       49.58
+         19 |    370,284       11.46       61.04
+         20 |    244,519        7.57       68.61
+         21 |    163,739        5.07       73.68
+         22 |    125,846        3.90       77.58
+         23 |     97,565        3.02       80.60
+         24 |     78,940        2.44       83.04
+         25 |     62,867        1.95       84.99
+         26 |     51,607        1.60       86.59
+         27 |     43,143        1.34       87.92
+         28 |     37,149        1.15       89.07
+         29 |     31,652        0.98       90.05
+         30 |     29,246        0.91       90.96
+         31 |     26,684        0.83       91.78
+         32 |     23,409        0.72       92.51
+         33 |     22,055        0.68       93.19
+         34 |     20,012        0.62       93.81
+         35 |     18,140        0.56       94.37
+         36 |     17,329        0.54       94.91
+         37 |     16,739        0.52       95.43
+         38 |     15,763        0.49       95.92
+         39 |     13,946        0.43       96.35
+         40 |     12,609        0.39       96.74
+         41 |     11,198        0.35       97.08
+         42 |     10,137        0.31       97.40
+         43 |      9,317        0.29       97.69
+         44 |      8,396        0.26       97.95
+         45 |      7,666        0.24       98.18
+         46 |      6,996        0.22       98.40
+         47 |      6,542        0.20       98.60
+         48 |      5,776        0.18       98.78
+         49 |      5,282        0.16       98.95
+         50 |      4,641        0.14       99.09
+         51 |      4,102        0.13       99.22
+         52 |      3,781        0.12       99.33
+         53 |      3,289        0.10       99.44
+         54 |      2,991        0.09       99.53
+         55 |      2,559        0.08       99.61
+         56 |      2,208        0.07       99.68
+         57 |      1,976        0.06       99.74
+         58 |      1,528        0.05       99.78
+         59 |      1,334        0.04       99.83
+         60 |      1,059        0.03       99.86
+         61 |        875        0.03       99.88
+         62 |        761        0.02       99.91
+         63 |        584        0.02       99.93
+         64 |        473        0.01       99.94
+         65 |        397        0.01       99.95
+         66 |        310        0.01       99.96
+         67 |        290        0.01       99.97
+         68 |        211        0.01       99.98
+         69 |        180        0.01       99.98
+         70 |        132        0.00       99.99
+         71 |         97        0.00       99.99
+         72 |         65        0.00       99.99
+         73 |         57        0.00      100.00
+         74 |         45        0.00      100.00
+         75 |         29        0.00      100.00
+         76 |         21        0.00      100.00
+         77 |         18        0.00      100.00
+         78 |         12        0.00      100.00
+         79 |         14        0.00      100.00
+         80 |          5        0.00      100.00
+         81 |          5        0.00      100.00
+         82 |          2        0.00      100.00
+         83 |          4        0.00      100.00
+         84 |          1        0.00      100.00
+         85 |          1        0.00      100.00
+         86 |          1        0.00      100.00
+         92 |          1        0.00      100.00
+------------+-----------------------------------
+      Total |  3,229,920      100.00
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. drop if tp_sexo=="."
+(0 observations deleted)
+
+. 
+. gen sexo=.
+(3,229,920 missing values generated)
+
+. replace sexo=1 if tp_sexo=="M"
+(1,323,018 real changes made)
+
+. replace sexo=0 if tp_sexo=="F"
+(1,906,902 real changes made)
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. drop if tp_cor_raca==0
+(58,905 observations deleted)
+
+. 
+. tab tp_cor_raca
+
+TP_COR_RACA |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |  1,254,325       39.56       39.56
+          2 |    380,135       11.99       51.54
+          3 |  1,445,807       45.59       97.14
+          4 |     73,317        2.31       99.45
+          5 |     17,431        0.55      100.00
+------------+-----------------------------------
+      Total |  3,171,015      100.00
+
+. 
+. gen cor=.
+(3,171,015 missing values generated)
+
+. replace cor=1 if tp_cor_raca==1
+(1,254,325 real changes made)
+
+. replace cor=0 if cor==.
+(1,916,690 real changes made)
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. drop if sg_uf_residencia=="."
+(0 observations deleted)
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. gen norte=.
+(3,171,015 missing values generated)
+
+. replace norte=1 if (sg_uf_residencia=="AC"|sg_uf_residencia=="AM"|sg_uf_residencia=="AP"|sg_uf_residencia=="PA"|
+> sg_uf_residencia=="RO"|sg_uf_residencia=="RR"|sg_uf_residencia=="TO")
+(346,191 real changes made)
+
+. replace norte=0 if norte==.
+(2,824,824 real changes made)
+
+. 
+. gen nordeste=.
+(3,171,015 missing values generated)
+
+. replace nordeste=1 if (sg_uf_residencia=="MA"|sg_uf_residencia=="PI"|sg_uf_residencia=="CE"|sg_uf_residencia=="R
+> N"|sg_uf_residencia=="PB"|sg_uf_residencia=="PE"|sg_uf_residencia=="SE"|sg_uf_residencia=="AL"|sg_uf_residencia=
+> ="BA")
+(1,069,114 real changes made)
+
+. replace nordeste=0 if nordeste==.
+(2,101,901 real changes made)
+
+. 
+. gen sudeste=.
+(3,171,015 missing values generated)
+
+. replace sudeste=1 if (sg_uf_residencia=="MG"|sg_uf_residencia=="RJ"|sg_uf_residencia=="SP"|sg_uf_residencia=="ES
+> ")
+(1,146,685 real changes made)
+
+. replace sudeste=0 if sudeste==.
+(2,024,330 real changes made)
+
+. 
+. gen sul=.
+(3,171,015 missing values generated)
+
+. replace sul=1 if (sg_uf_residencia=="RS"|sg_uf_residencia=="SC"|sg_uf_residencia=="PR")
+(347,494 real changes made)
+
+. replace sul=0 if sul==.
+(2,823,521 real changes made)
+
+. 
+. gen centro_oeste=.
+(3,171,015 missing values generated)
+
+. replace centro_oeste=1 if (sg_uf_residencia=="MT"|sg_uf_residencia=="MS"|sg_uf_residencia=="GO"|sg_uf_residencia
+> =="DF")
+(261,531 real changes made)
+
+. replace centro_oeste=0 if centro_oeste==.
+(2,909,484 real changes made)
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. drop if q024=="."
+(0 observations deleted)
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. gen computador=.
+(3,171,015 missing values generated)
+
+. replace computador=1 if (q024=="B"|q024=="C"|q024=="D"|q024=="E")
+(1,870,259 real changes made)
+
+. replace computador=0 if q024=="A"
+(1,300,756 real changes made)
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. rename nu_nota_lc nota_port 
+
+. rename nu_nota_mt nota_mat
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. drop if in_braille==. 
+(0 observations deleted)
+
+. drop if in_ampliada_24==. 
+(0 observations deleted)
+
+. drop if in_ampliada_18==. 
+(0 observations deleted)
+
+. drop if in_ledor==. 
+(0 observations deleted)
+
+. drop if in_acesso==. 
+(0 observations deleted)
+
+. drop if in_transcricao==. 
+(0 observations deleted)
+
+. drop if in_libras==. 
+(0 observations deleted)
+
+. drop if in_tempo_adicional==. 
+(0 observations deleted)
+
+. drop if in_leitura_labial==. 
+(0 observations deleted)
+
+. drop if in_mesa_cadeira_rodas==. 
+(0 observations deleted)
+
+. drop if in_mesa_cadeira_separada==. 
+(0 observations deleted)
+
+. drop if in_apoio_perna==. 
+(0 observations deleted)
+
+. drop if in_guia_interprete==. 
+(0 observations deleted)
+
+. drop if in_computador==. 
+(0 observations deleted)
+
+. drop if in_cadeira_especial==. 
+(0 observations deleted)
+
+. drop if in_cadeira_canhoto==. 
+(0 observations deleted)
+
+. drop if in_cadeira_acolchoada==. 
+(0 observations deleted)
+
+. drop if in_prova_deitado==. 
+(0 observations deleted)
+
+. drop if in_mobiliario_obeso==. 
+(0 observations deleted)
+
+. drop if in_lamina_overlay==. 
+(0 observations deleted)
+
+. drop if in_protetor_auricular==. 
+(0 observations deleted)
+
+. drop if in_medidor_glicose==. 
+(0 observations deleted)
+
+. drop if in_maquina_braile==. 
+(0 observations deleted)
+
+. drop if in_soroban==. 
+(0 observations deleted)
+
+. drop if in_marca_passo==. 
+(0 observations deleted)
+
+. drop if in_sonda==. 
+(0 observations deleted)
+
+. drop if in_medicamentos==. 
+(0 observations deleted)
+
+. drop if in_sala_individual==. 
+(0 observations deleted)
+
+. drop if in_sala_especial==. 
+(0 observations deleted)
+
+. drop if in_sala_acompanhante==. 
+(0 observations deleted)
+
+. drop if in_mobiliario_especifico==. 
+(0 observations deleted)
+
+. drop if in_material_especifico==.
+(0 observations deleted)
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. gen recursos=.
+(3,171,015 missing values generated)
+
+. replace recursos=1 if (in_braille==1|in_ampliada_24==1|in_ampliada_18==1|in_ledor==1|in_acesso==1|in_transcricao
+> ==1|in_libras==1|in_leitura_labial==1|in_mesa_cadeira_rodas==1|in_mesa_cadeira_separada==1|in_apoio_perna==1|in_
+> guia_interprete==1|in_computador==1|in_cadeira_especial==1|in_cadeira_canhoto==1|in_cadeira_acolchoada==1|in_pro
+> va_deitado==1|in_mobiliario_obeso==1|in_lamina_overlay==1|in_protetor_auricular==1|in_medidor_glicose==1|in_maqu
+> ina_braile==1|in_soroban==1|in_marca_passo==1|in_sonda==1|in_medicamentos==1|in_sala_individual==1|in_sala_espec
+> ial==1|in_sala_acompanhante==1|in_mobiliario_especifico==1|in_material_especifico==1|in_tempo_adicional==1)
+(18,096 real changes made)
+
+. replace recursos=0 if recursos==.
+(3,152,919 real changes made)
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. drop if recursos==.
+(0 observations deleted)
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. rename in_sem_recurso sem_recurso
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. gen atend_especializado=.
+(3,171,015 missing values generated)
+
+. replace atend_especializado=1 if (deficientes==1&recursos==1)
+(17,407 real changes made)
+
+. replace atend_especializado=0 if (deficientes==1&recursos==0)
+(3,636 real changes made)
+
+. 
+. tab deficientes
+
+deficientes |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |  3,149,972       99.34       99.34
+          1 |     21,043        0.66      100.00
+------------+-----------------------------------
+      Total |  3,171,015      100.00
+
+. 
+. tab atend_especializado
+
+atend_espec |
+   ializado |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      3,636       17.28       17.28
+          1 |     17,407       82.72      100.00
+------------+-----------------------------------
+      Total |     21,043      100.00
+
+. 
+end of do-file
+
+. 
+********************************************************************************
+
+save "C:\Users\Usuario\Documents\Mestrado em Economia\Dissertação\Arquivos do Stata\Oficial\ENEM2019.dta", replace
+
+**********************************************************************************************************************************************
+**********************************************************************************************************************************************
+**********************************************************************************************************************************************
+************TRABALHANDO NO PRIMEIRO ARTIGO: 'COMPARATIVO DOS DESEMPENHOS DOS ESTUDANTES DEFICIENTES E NÃO DEFICIENTES NO ENEM 2018'***********
+**********************************************************************************************************************************************
+**********************************************************************************************************************************************
+**********************************************************************************************************************************************
+
+******ANALISANDO OS DETERMINANTES DO DESEMPENHO DOS ESTUDANTES NÃO DEFICIENTES******
+
+save "C:\Users\Usuario\Documents\Mestrado em Economia\Dissertação\Arquivos do Stata\Oficial\ENEM2019_naodefic.dta"
+
+drop if co_escola==.
+
+drop if deficientes==1
+
+***GERANDO A VARIÁVEL RELATIVA À DEPENDENCIA ADMINISTRATIVA DA ESCOLA***
+
+gen escola_pública=.
+replace escola_pública=1 if (tp_dependencia_adm_esc==1|tp_dependencia_adm_esc==2|tp_dependencia_adm_esc==3)
+replace escola_pública=0 if escola_pública==.
+
+***MODELO INTERCEPTO ALEATÓRIO SEM INTERAÇÃO***
+ 
+*DESEMPENHO EM PORTUGUÊS 
+mixed nota_port sexo cor idade esc_pai2 esc_pai3 esc_pai4 esc_pai5 esc_mae2 esc_mae3 esc_mae4 esc_mae5 rendfam2 rendfam3 rendfam4 rendfam5 rendfam6 norte nordeste centro_oeste sul quantpes_dom computador internet escola_pública||co_escola:, nolog
+
+estat icc
+
+*DESEMPENHO EM MATEMÁTICA  
+mixed nota_mat sexo cor idade esc_pai2 esc_pai3 esc_pai4 esc_pai5 esc_mae2 esc_mae3 esc_mae4 esc_mae5 rendfam2 rendfam3 rendfam4 rendfam5 rendfam6 norte nordeste centro_oeste sul quantpes_dom computador internet escola_pública||co_escola:, nolog
+ 
+estat icc
+
+***RESULTADOS DOS COMANDOS ANTERIORES***
+. mixed nota_port sexo cor idade esc_pai2 esc_pai3 esc_pai4 esc_pai5 esc_mae2 esc_mae3 esc_mae4 esc_mae5 rendfam2 
+> rendfam3 rendfam4 rendfam5 rendfam6 norte nordeste centro_oeste sul quantpes_dom computador internet escola_públ
+> ica||co_escola:, nolog
+
+Mixed-effects ML regression                     Number of obs     =    798,069
+Group variable: co_escola                       Number of groups  =     29,126
+
+                                                Obs per group:
+                                                              min =          1
+                                                              avg =       27.4
+                                                              max =        552
+
+                                                Wald chi2(24)     =   88888.81
+Log likelihood = -4281558.9                     Prob > chi2       =     0.0000
+
+--------------------------------------------------------------------------------
+     nota_port |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+---------------+----------------------------------------------------------------
+          sexo |  -4.426611   .1177508   -37.59   0.000    -4.657398   -4.195823
+           cor |   5.860708   .1344433    43.59   0.000     5.597204    6.124212
+         idade |  -2.294593   .0256527   -89.45   0.000    -2.344871   -2.244315
+      esc_pai2 |   2.153893   .1851288    11.63   0.000     1.791047    2.516739
+      esc_pai3 |   5.466964   .1598165    34.21   0.000     5.153729    5.780198
+      esc_pai4 |   9.688162   .2499718    38.76   0.000     9.198226     10.1781
+      esc_pai5 |   9.845222   .3185344    30.91   0.000     9.220906    10.46954
+      esc_mae2 |   2.633739   .1950832    13.50   0.000     2.251383    3.016095
+      esc_mae3 |   5.924985       .169    35.06   0.000     5.593751    6.256219
+      esc_mae4 |   9.361594    .235928    39.68   0.000     8.899184    9.824005
+      esc_mae5 |   8.651331   .2671051    32.39   0.000     8.127814    9.174847
+      rendfam2 |   6.772658   .1688552    40.11   0.000     6.441708    7.103608
+      rendfam3 |    12.9036   .2068923    62.37   0.000      12.4981     13.3091
+      rendfam4 |   17.47015   .2680148    65.18   0.000     16.94485    17.99545
+      rendfam5 |   20.41699   .4005267    50.98   0.000     19.63198    21.20201
+      rendfam6 |   23.93738   .4407993    54.30   0.000     23.07343    24.80134
+         norte |  -18.93629   .5274689   -35.90   0.000    -19.97011   -17.90247
+      nordeste |   -12.8617   .3433829   -37.46   0.000    -13.53472   -12.18868
+  centro_oeste |  -9.262464   .5229155   -17.71   0.000    -10.28736   -8.237569
+           sul |  -.4539235   .4100761    -1.11   0.268    -1.257658    .3498109
+  quantpes_dom |  -1.962147   .0456306   -43.00   0.000    -2.051581   -1.872712
+    computador |   8.122916   .1450355    56.01   0.000     7.838652    8.407181
+      internet |   3.773976   .1782076    21.18   0.000     3.424696    4.123257
+escola_pública |  -32.87786   .3377855   -97.33   0.000    -33.53991   -32.21581
+         _cons |   574.2084   .6520997   880.55   0.000     572.9303    575.4865
+--------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+co_escola: Identity          |
+                  var(_cons) |   324.5227   4.121435      316.5446     332.702
+-----------------------------+------------------------------------------------
+               var(Residual) |   2564.067   4.123201      2555.999    2572.162
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 67148.01      Prob >= chibar2 = 0.0000
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. estat icc
+
+Residual intraclass correlation
+
+------------------------------------------------------------------------------
+                       Level |        ICC   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+                   co_escola |   .1123464   .0012848      .1098528    .1148893
+------------------------------------------------------------------------------
+
+. 
+end of do-file
+
+. mixed nota_mat sexo cor idade esc_pai2 esc_pai3 esc_pai4 esc_pai5 esc_mae2 esc_mae3 esc_mae4 esc_mae5 rendfam2 r
+> endfam3 rendfam4 rendfam5 rendfam6 norte nordeste centro_oeste sul quantpes_dom computador internet escola_públi
+> ca||co_escola:, nolog
+
+Mixed-effects ML regression                     Number of obs     =    798,069
+Group variable: co_escola                       Number of groups  =     29,126
+
+                                                Obs per group:
+                                                              min =          1
+                                                              avg =       27.4
+                                                              max =        552
+
+                                                Wald chi2(24)     =  112804.42
+Log likelihood = -4669291.1                     Prob > chi2       =     0.0000
+
+--------------------------------------------------------------------------------
+      nota_mat |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+---------------+----------------------------------------------------------------
+          sexo |   31.23477   .1907696   163.73   0.000     30.86087    31.60867
+           cor |   9.578682    .218136    43.91   0.000     9.151144    10.00622
+         idade |  -3.356036   .0418922   -80.11   0.000    -3.438143   -3.273929
+      esc_pai2 |   .7338522   .2999513     2.45   0.014     .1459585    1.321746
+      esc_pai3 |   4.649713   .2590676    17.95   0.000     4.141949    5.157476
+      esc_pai4 |   12.91499   .4051079    31.88   0.000       12.121    13.70899
+      esc_pai5 |   12.11584    .516206    23.47   0.000     11.10409    13.12758
+      esc_mae2 |   1.378375   .3160919     4.36   0.000     .7588465    1.997904
+      esc_mae3 |   6.180278   .2739521    22.56   0.000     5.643342    6.717215
+      esc_mae4 |   13.05984   .3823812    34.15   0.000     12.31038    13.80929
+      esc_mae5 |   12.36702   .4329517    28.56   0.000     11.51845    13.21559
+      rendfam2 |   8.518648   .2740293    31.09   0.000     7.981561    9.055736
+      rendfam3 |   20.13878   .3358289    59.97   0.000     19.48057      20.797
+      rendfam4 |   32.89581   .4349305    75.63   0.000     32.04336    33.74826
+      rendfam5 |   40.00323   .6500706    61.54   0.000     38.72911    41.27734
+      rendfam6 |   50.67975   .7175183    70.63   0.000     49.27344    52.08606
+         norte |  -26.38495   .9990979   -26.41   0.000    -28.34315   -24.42675
+      nordeste |  -12.68081   .6506058   -19.49   0.000    -13.95598   -11.40565
+  centro_oeste |  -13.36923   .9912091   -13.49   0.000    -15.31196    -11.4265
+           sul |   .8517909    .775092     1.10   0.272    -.6673616    2.370943
+  quantpes_dom |  -1.170718   .0739612   -15.83   0.000     -1.31568   -1.025757
+    computador |   11.26328   .2350476    47.92   0.000      10.8026    11.72397
+      internet |   2.074778   .2894794     7.17   0.000     1.507409    2.642147
+escola_pública |  -70.75554   .6271112  -112.83   0.000    -71.98465   -69.52642
+         _cons |    600.694   1.100308   545.93   0.000     598.5375    602.8506
+--------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+co_escola: Identity          |
+                  var(_cons) |   1324.343   15.22742      1294.832    1354.528
+-----------------------------+------------------------------------------------
+               var(Residual) |   6705.239   10.78925      6684.126    6726.419
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 1.1e+05       Prob >= chibar2 = 0.0000
+
+.  
+. estat icc
+
+Residual intraclass correlation
+
+------------------------------------------------------------------------------
+                       Level |        ICC   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+                   co_escola |    .164933   .0016083      .1618051    .1681094
+------------------------------------------------------------------------------
+
+. 
+end of do-file
+
+. 
+********************************************************************************
+
+***MODELO NULO***
+
+*DESEMPENHO EM PORTUGUÊS 
+mixed nota_port||co_escola:, nolog
+
+estat icc
+
+*DESEMPENHO EM MATEMÁTICA  
+mixed nota_mat||co_escola:, nolog
+ 
+estat icc
+
+***RESULTADOS DOS COMANDOS ANTERIORES***
+. mixed nota_port||co_escola:, nolog
+
+Mixed-effects ML regression                     Number of obs     =    798,069
+Group variable: co_escola                       Number of groups  =     29,126
+
+                                                Obs per group:
+                                                              min =          1
+                                                              avg =       27.4
+                                                              max =        552
+
+                                                Wald chi2(0)      =          .
+Log likelihood =   -4314443                     Prob > chi2       =          .
+
+------------------------------------------------------------------------------
+   nota_port |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       _cons |   518.6395   .2324717  2230.98   0.000     518.1839    519.0952
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+co_escola: Identity          |
+                  var(_cons) |   1258.729   12.81339      1233.864    1284.095
+-----------------------------+------------------------------------------------
+               var(Residual) |   2692.106   4.338745      2683.616    2700.624
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 2.5e+05       Prob >= chibar2 = 0.0000
+
+. 
+. estat icc
+
+Intraclass correlation
+
+------------------------------------------------------------------------------
+                       Level |        ICC   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+                   co_escola |   .3185982   .0022487      .3142072    .3230216
+------------------------------------------------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. mixed nota_mat||co_escola:, nolog
+
+Mixed-effects ML regression                     Number of obs     =    798,069
+Group variable: co_escola                       Number of groups  =     29,126
+
+                                                Obs per group:
+                                                              min =          1
+                                                              avg =       27.4
+                                                              max =        552
+
+                                                Wald chi2(0)      =          .
+Log likelihood = -4714453.1                     Prob > chi2       =          .
+
+------------------------------------------------------------------------------
+    nota_mat |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       _cons |   523.8787   .4267385  1227.63   0.000     523.0423    524.7151
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+co_escola: Identity          |
+                  var(_cons) |    4400.77   42.77438      4317.728     4485.41
+-----------------------------+------------------------------------------------
+               var(Residual) |   7279.986   11.72896      7257.034     7303.01
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 3.4e+05       Prob >= chibar2 = 0.0000
+
+.  
+. estat icc
+
+Intraclass correlation
+
+------------------------------------------------------------------------------
+                       Level |        ICC   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+                   co_escola |   .3767539   .0023221      .3722136     .381316
+------------------------------------------------------------------------------
+
+. 
+end of do-file
+
+. 
+********************************************************************************
+
+
+save "C:\Users\Usuario\Documents\Mestrado em Economia\Dissertação\Arquivos do Stata\Oficial\ENEM2019_naodefic.dta", replace
+
+clear
+
+******ANALISANDO OS DETERMINANTES DO DESEMPENHO DOS ESTUDANTES DEFICIENTES******
+
+use "C:\Users\Usuario\Documents\Mestrado em Economia\Dissertação\Arquivos do Stata\Oficial\ENEM2019.dta"
+
+save "C:\Users\Usuario\Documents\Mestrado em Economia\Dissertação\Arquivos do Stata\Oficial\ENEM2019_deficientes_artigo1.dta"
+
+drop if co_escola==.
+
+drop if deficientes==0
+
+tab deficientes
+
+***GERANDO A VARIÁVEL RELATIVA À DEPENDENCIA ADMINISTRATIVA DA ESCOLA***
+
+gen escola_pública=.
+replace escola_pública=1 if (tp_dependencia_adm_esc==1|tp_dependencia_adm_esc==2|tp_dependencia_adm_esc==3)
+replace escola_pública=0 if escola_pública==.
+
+***MODELO INTERCEPTO ALEATÓRIO SEM INTERAÇÃO***
+ 
+*DESEMPENHO EM PORTUGUÊS 
+mixed nota_port sexo cor idade esc_pai2 esc_pai3 esc_pai4 esc_pai5 esc_mae2 esc_mae3 esc_mae4 esc_mae5 rendfam2 rendfam3 rendfam4 rendfam5 rendfam6 norte nordeste centro_oeste sul quantpes_dom computador internet escola_pública||co_escola:, nolog
+
+estat icc
+
+*DESEMPENHO EM MATEMÁTICA
+mixed nota_mat sexo cor idade esc_pai2 esc_pai3 esc_pai4 esc_pai5 esc_mae2 esc_mae3 esc_mae4 esc_mae5 rendfam2 rendfam3 rendfam4 rendfam5 rendfam6 norte nordeste centro_oeste sul quantpes_dom computador internet escola_pública||co_escola:, nolog
+ 
+estat icc
+
+***RESULTADOS DOS COMANDOS ANTERIORES***
+. mixed nota_port sexo cor idade esc_pai2 esc_pai3 esc_pai4 esc_pai5 esc_mae2 esc_mae3 esc_mae4 esc_mae5 rendfam2 
+> rendfam3 rendfam4 rendfam5 rendfam6 norte nordeste centro_oeste sul quantpes_dom computador internet escola_públ
+> ica||co_escola:, nolog
+
+Mixed-effects ML regression                     Number of obs     =      4,615
+Group variable: co_escola                       Number of groups  =      3,399
+
+                                                Obs per group:
+                                                              min =          1
+                                                              avg =        1.4
+                                                              max =         23
+
+                                                Wald chi2(24)     =    1663.38
+Log likelihood = -25777.801                     Prob > chi2       =     0.0000
+
+--------------------------------------------------------------------------------
+     nota_port |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+---------------+----------------------------------------------------------------
+          sexo |  -4.504843   1.900508    -2.37   0.018    -8.229772   -.7799153
+           cor |     1.9473   2.127484     0.92   0.360    -2.222491    6.117092
+         idade |  -2.118057   .2294635    -9.23   0.000    -2.567797   -1.668317
+      esc_pai2 |   1.604438   3.552192     0.45   0.652     -5.35773    8.566607
+      esc_pai3 |    9.17813    2.93541     3.13   0.002     3.424832    14.93143
+      esc_pai4 |    11.5723   3.823185     3.03   0.002      4.07899     19.0656
+      esc_pai5 |   15.17631   4.253922     3.57   0.000     6.838779    23.51385
+      esc_mae2 |  -2.712437   3.806385    -0.71   0.476    -10.17281    4.747941
+      esc_mae3 |  -.6349956   3.228619    -0.20   0.844    -6.962972    5.692981
+      esc_mae4 |   11.53627   4.027735     2.86   0.004     3.642059    19.43049
+      esc_mae5 |   7.535379   4.136207     1.82   0.068    -.5714376    15.64219
+      rendfam2 |   -5.57752   2.957896    -1.89   0.059    -11.37489    .2198501
+      rendfam3 |   6.801319   3.652977     1.86   0.063    -.3583838    13.96102
+      rendfam4 |   22.89925   4.333303     5.28   0.000     14.40613    31.39237
+      rendfam5 |   22.86153   5.259754     4.35   0.000     12.55261    33.17046
+      rendfam6 |   33.44125   5.060844     6.61   0.000     23.52218    43.36032
+         norte |  -21.05072   4.001841    -5.26   0.000    -28.89419   -13.20726
+      nordeste |  -15.64057   2.650231    -5.90   0.000    -20.83492   -10.44621
+  centro_oeste |  -11.20945   3.651909    -3.07   0.002    -18.36706   -4.051841
+           sul |  -6.843786   3.609028    -1.90   0.058    -13.91735    .2297779
+  quantpes_dom |  -2.288118   .7508695    -3.05   0.002    -3.759795   -.8164407
+    computador |   4.628026   2.640277     1.75   0.080    -.5468212    9.802873
+      internet |   6.966009   3.188114     2.18   0.029     .7174204     13.2146
+escola_pública |  -31.46834   2.831683   -11.11   0.000    -37.01834   -25.91834
+         _cons |   553.1308   7.754778    71.33   0.000     537.9317    568.3299
+--------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+co_escola: Identity          |
+                  var(_cons) |   1008.976   116.1503      805.1799    1264.353
+-----------------------------+------------------------------------------------
+               var(Residual) |   3245.823   116.5289       3025.28    3482.443
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 125.53        Prob >= chibar2 = 0.0000
+
+. 
+. estat icc
+
+Residual intraclass correlation
+
+------------------------------------------------------------------------------
+                       Level |        ICC   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+                   co_escola |   .2371383   .0257731       .190361    .2912749
+------------------------------------------------------------------------------
+
+. 
+.   
+. mixed nota_mat sexo cor idade esc_pai2 esc_pai3 esc_pai4 esc_pai5 esc_mae2 esc_mae3 esc_mae4 esc_mae5 rendfam2 r
+> endfam3 rendfam4 rendfam5 rendfam6 norte nordeste centro_oeste sul quantpes_dom computador internet escola_públi
+> ca||co_escola:, nolog
+
+Mixed-effects ML regression                     Number of obs     =      4,615
+Group variable: co_escola                       Number of groups  =      3,399
+
+                                                Obs per group:
+                                                              min =          1
+                                                              avg =        1.4
+                                                              max =         23
+
+                                                Wald chi2(24)     =    1934.05
+Log likelihood =  -27607.22                     Prob > chi2       =     0.0000
+
+--------------------------------------------------------------------------------
+      nota_mat |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+---------------+----------------------------------------------------------------
+          sexo |   18.26623   2.822665     6.47   0.000     12.73391    23.79855
+           cor |    1.58243   3.159863     0.50   0.617    -4.610789    7.775649
+         idade |  -2.488812   .3412349    -7.29   0.000     -3.15762   -1.820003
+      esc_pai2 |  -1.273343   5.279129    -0.24   0.809    -11.62024    9.073559
+      esc_pai3 |   7.276722   4.361971     1.67   0.095    -1.272583    15.82603
+      esc_pai4 |   14.64602   5.678183     2.58   0.010     3.516984    25.77505
+      esc_pai5 |   29.78747   6.316139     4.72   0.000     17.40806    42.16687
+      esc_mae2 |  -6.044269   5.655758    -1.07   0.285    -17.12935    5.040813
+      esc_mae3 |  -.2411273   4.797735    -0.05   0.960    -9.644515     9.16226
+      esc_mae4 |   16.51114   5.984336     2.76   0.006     4.782059    28.24022
+      esc_mae5 |    7.56135   6.145649     1.23   0.219    -4.483899     19.6066
+      rendfam2 |   2.677199   4.395897     0.61   0.543      -5.9386      11.293
+      rendfam3 |   14.77606   5.429165     2.72   0.006     4.135096    25.41703
+      rendfam4 |   38.49179   6.439213     5.98   0.000     25.87117    51.11242
+      rendfam5 |   42.82376   7.812207     5.48   0.000     27.51212    58.13541
+      rendfam6 |   84.13432   7.519067    11.19   0.000     69.39721    98.87142
+         norte |  -31.33029   5.969264    -5.25   0.000    -43.02983   -19.63074
+      nordeste |   -16.0773   3.956162    -4.06   0.000    -23.83123   -8.323364
+  centro_oeste |  -15.42857   5.452369    -2.83   0.005    -26.11502   -4.742121
+           sul |  -9.324692   5.383588    -1.73   0.083    -19.87633    1.226947
+  quantpes_dom |   -2.31495   1.115066    -2.08   0.038     -4.50044   -.1294594
+    computador |   9.705028   3.922145     2.47   0.013     2.017766    17.39229
+      internet |  -.7621853   4.739018    -0.16   0.872    -10.05049    8.526119
+escola_pública |  -52.36816    4.22074   -12.41   0.000    -60.64065   -44.09566
+         _cons |   566.3362   11.53051    49.12   0.000     543.7368    588.9356
+--------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+co_escola: Identity          |
+                  var(_cons) |   2379.499   220.8312       1983.76    2854.184
+-----------------------------+------------------------------------------------
+               var(Residual) |   7047.957   229.8355      6611.581    7513.133
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 193.50        Prob >= chibar2 = 0.0000
+
+.  
+. estat icc
+
+Residual intraclass correlation
+
+------------------------------------------------------------------------------
+                       Level |        ICC   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+                   co_escola |    .252401   .0218021      .2121013    .2974668
+------------------------------------------------------------------------------
+
+. 
+end of do-file
+
+. 
+********************************************************************************
+ 
+***MODELO NULO***
+
+*DESEMPENHO EM PORTUGUÊS 
+mixed nota_port||co_escola:, nolog
+
+estat icc
+
+*DESEMPENHO EM MATEMÁTICA  
+mixed nota_mat||co_escola:, nolog
+
+estat icc
+
+***RESULTADOS DOS COMANDOS ANTERIORES***
+. mixed nota_port||co_escola:, nolog
+
+Mixed-effects ML regression                     Number of obs     =      4,615
+Group variable: co_escola                       Number of groups  =      3,399
+
+                                                Obs per group:
+                                                              min =          1
+                                                              avg =        1.4
+                                                              max =         23
+
+                                                Wald chi2(0)      =          .
+Log likelihood = -26428.389                     Prob > chi2       =          .
+
+------------------------------------------------------------------------------
+   nota_port |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       _cons |   498.4121   1.270919   392.17   0.000     495.9211     500.903
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+co_escola: Identity          |
+                  var(_cons) |   2842.074   150.5576      2561.789    3153.025
+-----------------------------+------------------------------------------------
+               var(Residual) |   3162.759   115.5331      2944.234    3397.503
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 568.07        Prob >= chibar2 = 0.0000
+
+. 
+. estat icc
+
+Intraclass correlation
+
+------------------------------------------------------------------------------
+                       Level |        ICC   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+                   co_escola |   .4732977   .0196263      .4350643    .5118469
+------------------------------------------------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\Usuario\AppData\Local\Temp\STD1b28_000000.tmp"
+
+. mixed nota_mat||co_escola:, nolog
+
+Mixed-effects ML regression                     Number of obs     =      4,615
+Group variable: co_escola                       Number of groups  =      3,399
+
+                                                Obs per group:
+                                                              min =          1
+                                                              avg =        1.4
+                                                              max =         23
+
+                                                Wald chi2(0)      =          .
+Log likelihood = -28341.793                     Prob > chi2       =          .
+
+------------------------------------------------------------------------------
+    nota_mat |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       _cons |   510.4521    1.92775   264.79   0.000     506.6738    514.2304
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+co_escola: Identity          |
+                  var(_cons) |   6618.829   315.8938      6027.764    7267.852
+-----------------------------+------------------------------------------------
+               var(Residual) |   7174.912   244.5687      6711.227    7670.632
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 806.56        Prob >= chibar2 = 0.0000
+
+. 
+. estat icc
+
+Intraclass correlation
+
+------------------------------------------------------------------------------
+                       Level |        ICC   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+                   co_escola |   .4798429   .0174562      .4457769    .5140975
+------------------------------------------------------------------------------
+
+. 
+end of do-file
+
+. 
+********************************************************************************
+
+save "C:\Users\Usuario\Documents\Mestrado em Economia\Dissertação\Arquivos do Stata\Oficial\ENEM2019_deficientes_artigo1.dta", replace
+
+clear 
+
+**********************************************************************************************************************************************
+**********************************************************************************************************************************************
+**********************************************************************************************************************************************
+**TRABALHANDO NO SEGUNDO ARTIGO: EFEITO DA POLÍTICA DE ATENDIMENTO ESPECIALIZADO SOBRE O DESEMPENHO DOS ESTUDANTES DEFICIENTES NO ENEM 2019'**
+**********************************************************************************************************************************************
+**********************************************************************************************************************************************
+**********************************************************************************************************************************************
+
+use "C:\Users\Usuario\Documents\Mestrado em Economia\Dissertação\Arquivos do Stata\Oficial\ENEM2019.dta"
+
+save "C:\Users\Usuario\Documents\Mestrado em Economia\Dissertação\Arquivos do Stata\Oficial\ENEM2019_deficientes_artigo2.dta"
+
+drop if deficientes==0
+
+***BALANCEANDO A VARIÁVEL 'ATENDIMENTO ESPECIALIZADO"***
+pscore atend_especializado sexo cor idade esc_pai5 esc_pai4 esc_pai3 esc_pai2 esc_mae5 esc_mae4 esc_mae3 esc_mae2 rendfam5 rendfam4 rendfam3 rendfam2 rendfam1 internet computador quantpes_dom, pscore(escore2) blockid(blockf1) comsup level (0.010) 
+
+***RESULTADO DO COMANDO ANTERIOR***
+. pscore atend_especializado sexo cor idade esc_pai5 esc_pai4 esc_pai3 esc_pai2 esc_mae5 esc_mae4 esc_mae3 esc_mae
+> 2 rendfam5 rendfam4 rendfam3 rendfam2 rendfam1 internet computador quantpes_dom, pscore(escore2) blockid(blockf1
+> ) comsup level (0.010) 
+
+
+
+**************************************************** 
+Algorithm to estimate the propensity score 
+**************************************************** 
+
+
+The treatment is atend_especializado
+
+atend_espec |
+   ializado |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      3,636       17.28       17.28
+          1 |     17,407       82.72      100.00
+------------+-----------------------------------
+      Total |     21,043      100.00
+
+
+
+Estimation of the propensity score 
+
+Iteration 0:   log likelihood = -9685.6965
+Iteration 1:   log likelihood = -9539.0832
+Iteration 2:   log likelihood = -9538.6219
+Iteration 3:   log likelihood = -9538.6219
+
+Probit regression                                 Number of obs   =      21043
+                                                  LR chi2(19)     =     294.15
+                                                  Prob > chi2     =     0.0000
+Log likelihood = -9538.6219                       Pseudo R2       =     0.0152
+
+------------------------------------------------------------------------------
+atend_espe~o |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        sexo |   -.076341   .0206033    -3.71   0.000    -.1167227   -.0359593
+         cor |   .0480618   .0219591     2.19   0.029     .0050229    .0911008
+       idade |   .0103351   .0013165     7.85   0.000     .0077547    .0129155
+    esc_pai5 |   .0751212    .048699     1.54   0.123    -.0203271    .1705694
+    esc_pai4 |   .0014163   .0405097     0.03   0.972    -.0779812    .0808138
+    esc_pai3 |    .011163   .0299537     0.37   0.709    -.0475452    .0698712
+    esc_pai2 |   .0071838   .0373551     0.19   0.847    -.0660309    .0803984
+    esc_mae5 |   .1589266   .0427185     3.72   0.000     .0751999    .2426532
+    esc_mae4 |   .0991102   .0410574     2.41   0.016     .0186392    .1795812
+    esc_mae3 |  -.0168408   .0315402    -0.53   0.593    -.0786585    .0449769
+    esc_mae2 |   -.027885   .0392423    -0.71   0.477    -.1047985    .0490285
+    rendfam5 |   .0370003   .0582268     0.64   0.525     -.077122    .1511226
+    rendfam4 |  -.0243653   .0494294    -0.49   0.622    -.1212451    .0725144
+    rendfam3 |   -.133291   .0496539    -2.68   0.007    -.2306108   -.0359712
+    rendfam2 |  -.2074386   .0505516    -4.10   0.000    -.3065179   -.1083593
+    rendfam1 |  -.2158084   .0548748    -3.93   0.000     -.323361   -.1082557
+    internet |  -.1089427   .0325197    -3.35   0.001    -.1726801   -.0452052
+  computador |   .1013419   .0265797     3.81   0.000     .0492466    .1534371
+quantpes_dom |  -.0023633   .0074691    -0.32   0.752    -.0170024    .0122758
+       _cons |   .8412079   .0827766    10.16   0.000     .6789688    1.003447
+------------------------------------------------------------------------------
+
+
+
+Note: the common support option has been selected
+The region of common support is [.71583164, .9486291]
+
+
+
+Description of the estimated propensity score 
+in region of common support 
+
+                 Estimated propensity score
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%      .733905       .7158316
+ 5%     .7568046       .7171525
+10%     .7681722       .7178962       Obs              21,041
+25%     .7925914       .7193251       Sum of Wgt.      21,041
+
+50%     .8266921                      Mean           .8272237
+                        Largest       Std. Dev.      .0443042
+75%     .8640671       .9425914
+90%     .8864756       .9453172       Variance       .0019629
+95%     .8961578       .9480814       Skewness       -.043855
+99%      .910198       .9486291       Kurtosis       2.108004
+
+
+
+****************************************************** 
+Step 1: Identification of the optimal number of blocks 
+Use option detail if you want more detailed output 
+****************************************************** 
+
+
+The final number of blocks is 11
+
+This number of blocks ensures that the mean propensity score
+is not different for treated and controls in each blocks
+
+
+
+********************************************************** 
+Step 2: Test of balancing property of the propensity score 
+Use option detail if you want more detailed output 
+********************************************************** 
+
+
+The balancing property is satisfied 
+
+
+This table shows the inferior bound, the number of treated
+and the number of controls for each block 
+
+  Inferior |
+  of block |  atend_especializado
+of pscore  |         0          1 |     Total
+-----------+----------------------+----------
+        .7 |       172        506 |       678 
+       .75 |     1,273      4,529 |     5,802 
+        .8 |       739      3,083 |     3,822 
+      .825 |       584      2,900 |     3,484 
+       .85 |       464      3,109 |     3,573 
+      .875 |       324      2,630 |     2,954 
+        .9 |        78        650 |       728 
+-----------+----------------------+----------
+     Total |     3,634     17,407 |    21,041 
+Note: the common support option has been selected
+
+
+******************************************* 
+End of the algorithm to estimate the pscore 
+******************************************* 
+
+. 
+end of do-file
+
+. 
+********************************************************************************
+
+***PELO PAREAMENTO AO VIZINHO MAIS PRÓXIMO***
+attnd nota_port atend_especializado, pscore(escore2) comsup
+
+attnd nota_mat atend_especializado, pscore(escore2) comsup
+
+***RESULTADO DOS COMANDOS ANTERIORES***
+. attnd nota_port atend_especializado, pscore(escore2) comsup
+
+
+ The program is searching the nearest neighbor of each treated unit. 
+ This operation may take a while.
+
+
+
+ATT estimation with Nearest Neighbor Matching method 
+(random draw version)
+Analytical standard errors
+
+---------------------------------------------------------
+n. treat.   n. contr.         ATT    Std. Err.          t
+---------------------------------------------------------
+
+    17407        3338      18.473        1.858      9.941
+
+---------------------------------------------------------
+Note: the numbers of treated and controls refer to actual
+nearest neighbour matches
+
+. 
+. attnd nota_mat atend_especializado, pscore(escore2) comsup
+
+
+ The program is searching the nearest neighbor of each treated unit. 
+ This operation may take a while.
+
+
+
+ATT estimation with Nearest Neighbor Matching method 
+(random draw version)
+Analytical standard errors
+
+---------------------------------------------------------
+n. treat.   n. contr.         ATT    Std. Err.          t
+---------------------------------------------------------
+
+    17407        3338      25.284        2.656      9.519
+
+---------------------------------------------------------
+Note: the numbers of treated and controls refer to actual
+nearest neighbour matches
+
+. 
+end of do-file
+
+. 
+********************************************************************************
+
+save "C:\Users\Usuario\Documents\Mestrado em Economia\Dissertação\Arquivos do Stata\Oficial\ENEM2019_deficientes_artigo2.dta", replace
+
+clear
+
+
+
+
+
