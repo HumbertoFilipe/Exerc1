@@ -1,0 +1,50 @@
+Callaway e Santana (2018)
+
+Neste artigo, consideramos os procedimentos de identificação e inferência para efeitos médios de 
+tratamento em modelos DID com (i) múltiplosperíodos de tempo, (ii) variação no tempo de tratamento,
+e (iii) quando a suposição de tendências paralelasmantém-se potencialmente apenas após o 
+condicionamento nas covariáveis ​​observadas.
+
+Nossa proposta difere dos modelo de regressão com "efeitos fixos bidirecionais"
+
+Entre outras coisas, as variações da regressão (FE Bidir) se concentra em entender qual parâmetro 
+causal o coeficiente β representa na heterogeneidade do efeito do tratamento. 
+
+Porém, em vez de seguir este caminho, foi definido primeiro um parâmetro de interesse fácil de 
+interpretar e, em seguida, foi fornecida as condiçõessob sobre qual tal parâmetro é identificado 
+não parametricamente. Aqui, os parâmetros causais de interesse são funcionais e o efeito médio do 
+tratamento para o grupo "g" no tempo "t", em que um “grupo” é definido por quando as unidades são
+tratadas pela primeira vez. Chamamos esses parâmetros causais de grupo-tempo médio dos efeitos de 
+tratamento; na configuração DID canônica, eles colapsam para o ATT.
+
+O desvio do modelo de regressão de efeitos fixos bidirecionais (FE Bidir) tem diversas vantagens:
+
+1) Nosso parâmetro de interesse não é determinado pelo método de estimação! A inferência sobre a 
+eficácia de uma determinada política pode ser enganosa quando baseada sobre (FE Bidir), a menos que
+se restringe ainda mais o efeito do tratamento de heterogeneidade (algo que costuma ocorrer devido 
+ao sistema de pesos atribuídos);
+
+2) Propomos procedimentos de agregação no parâmetros causal: por (a) tempo de abordagem selectiva,
+ou seja, permitindo, por exemplo, a possibilidade de que indivíduos com os maiores benefícios de 
+participar de um tratamento optam por ser tratados mais cedo do que aqueles com um benefício menor;
+por (b) efeitos de tratamento dinâmico - onde o efeito de um tratamento pode depender do tempo de 
+exposição ao tratamento; ou por (c) efeitos de tempo de calendário, onde o efeito do tratamento 
+pode depender do período de tempo. Como o coeficiente global β (FE Bidir), nossos procedimentos de 
+agregação propostos resultam em um único “efeito” estimado de tratamento. No entanto, em contraste 
+com β, nossos parâmetros agregados têm uma interpretação causal clara;
+
+3) As 3ª e 4ª contrinuições são assintóticas: NÃO CONSEGUI IDENTIFICAR O PAPEL DA PRIMEIRA, mas a 
+segunda é referente a condição necessária de tendência paralelas prévias, onde é realizado um teste
+indicado pelos próprios autores de desmembrado na seção referente.
+
+Atenção: Seção 4 e Pressupostos 2 e 6 - Tendências Paralelas Condicinais e Aumentadas
+- Procedimento: (1) o primeiro passo sem desvatagens seria estimar o ATT no período pré tratamento
+e este se portar bem próximo de zero (contudo, tal procedimento intuitivo apresenta restrições);
+(2) como caminho alternativo, é proposta um análise por Momentos Condicinais Intergrados (ICM).
+
+ 
+
+
+
+
+
